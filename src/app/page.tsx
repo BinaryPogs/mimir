@@ -1,7 +1,12 @@
-import { Button } from "@/components/ui/button";
+import { DashboardTabs } from "@/components/dashboard/navigation/dashboard-tabs";
 
-export default async function Home() {
+export default function Home() {
   return (
-    <Button>Hello World</Button>
+    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+      <div className="flex items-center justify-between space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+      </div>
+      <DashboardTabs />
+    </div>
   );
 }
