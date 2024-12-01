@@ -1,4 +1,7 @@
+'use client'
+
 import { DashboardTabs } from "@/components/dashboard/navigation/dashboard-tabs";
+import { MarketOverview } from "@/components/market/market-overview";
 
 export default function Home() {
   return (
@@ -7,6 +10,7 @@ export default function Home() {
         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
       </div>
       <DashboardTabs />
+      <MarketOverview />
     </div>
   );
 }
