@@ -1,12 +1,14 @@
-import { TransactionForm } from "@/components/transactions/transaction-form";
+"use client"
+
+import { AddTransactionDialog } from "@/components/dashboard/portfolio/transactions/add-transaction-dialog"
 
 export default function TransactionsPage() {
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Add Transaction</h1>
-      <div className="max-w-2xl">
-        <TransactionForm />
+    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+      <div className="flex items-center justify-between space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight">Transactions</h2>
+        <AddTransactionDialog />
       </div>
     </div>
-  );
+  )
 }
