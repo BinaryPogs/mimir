@@ -1,108 +1,72 @@
-import { useState } from "react";
-import { api } from "@/utils/api";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+"use client"
 
-interface CoinSelectorProps {
-  value?: string;
-  onSelect: (value: string) => void;
-}
+import * as React from "react"
+import { Check, Search } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Input } from "@/components/ui/input"
+import { api } from "@/utils/api"
 
 interface Coin {
   id: string;
   name: string;
   symbol: string;
-  image?: string;
-  current_price?: number;
-  market_cap?: number;
+  image: string;
+}
+
+interface CoinSelectorProps {
+  value: string
+  onSelect: (value: string) => void
 }
 
 export function CoinSelector({ value, onSelect }: CoinSelectorProps) {
-  const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  
-  const { data: coins, isLoading } = api.coin.getAll.useQuery();
-  
-  const filteredCoins = coins?.filter((coin: Coin) => 
-    coin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    coin.symbol.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const [search, setSearch] = React.useState("")
+  const { data: coins } = api.coin.getAll.useQuery<Coin[]>()
+
+  const filteredCoins = coins?.filter((coin) => 
+    coin.name.toLowerCase().includes(search.toLowerCase()) ||
+    coin.symbol.toLowerCase().includes(search.toLowerCase())
+  )
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-full justify-between"
-        >
-          {value 
-            ? coins?.find((coin: Coin) => coin.id === value)?.name 
-            : "Select coin..."}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
-        <Command>
-          <CommandInput 
-            placeholder="Search coins..." 
-            value={searchQuery}
-            onValueChange={setSearchQuery}
-          />
-          <CommandEmpty>No coins found.</CommandEmpty>
-          <CommandGroup className="max-h-[300px] overflow-y-auto">
-            {filteredCoins?.map((coin: Coin) => (
-              <CommandItem
-                key={coin.id}
-                value={coin.id}
-                onSelect={() => {
-                  onSelect(coin.id);
-                  setOpen(false);
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  {coin.image && (
-                    <img 
-                      src={coin.image} 
-                      alt={coin.name} 
-                      className="w-5 h-5"
-                    />
-                  )}
-                  <span>{coin.name}</span>
-                  <span className="text-muted-foreground">
-                    ({coin.symbol})
-                  </span>
-                  {coin.current_price && (
-                    <span className="ml-auto">
-                      ${coin.current_price.toLocaleString()}
-                    </span>
-                  )}
+    <div className="relative">
+      <div className="relative">
+        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search coins..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="pl-8"
+        />
+      </div>
+      <div className="mt-2 max-h-[300px] overflow-y-auto rounded-md border bg-popover">
+        {filteredCoins?.map((coin: Coin) => (
+          <div
+            key={coin.id}
+            onClick={() => onSelect(coin.id === value ? "" : coin.id)}
+            className={cn(
+              "flex cursor-pointer items-center justify-between px-4 py-2 hover:bg-muted",
+              value === coin.id && "bg-muted"
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <img 
+                src={coin.image} 
+                alt={coin.name} 
+                className="h-6 w-6" 
+              />
+              <div>
+                <div className="font-medium">{coin.name}</div>
+                <div className="text-sm text-muted-foreground">
+                  {coin.symbol.toUpperCase()}
                 </div>
-                <Check
-                  className={cn(
-                    "ml-auto h-4 w-4",
-                    value === coin.id ? "opacity-100" : "opacity-0"
-                  )}
-                />
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
+              </div>
+            </div>
+            {value === coin.id && (
+              <Check className="h-4 w-4 text-primary" />
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }

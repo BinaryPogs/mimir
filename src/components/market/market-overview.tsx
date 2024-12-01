@@ -3,8 +3,19 @@
 import { api } from "@/utils/api";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 
+interface Coin {
+  id: string;
+  name: string;
+  symbol: string;
+  image: string;
+  current_price: number;
+  market_cap: number;
+  total_volume: number;
+  price_change_percentage_24h: number;
+}
+
 export function MarketOverview() {
-  const { data: coins, isLoading } = api.coin.getAll.useQuery();
+  const { data: coins, isLoading } = api.coin.getAll.useQuery<Coin[]>();
 
   return (
     <div className="rounded-lg border bg-card">
@@ -29,7 +40,7 @@ export function MarketOverview() {
                 <td colSpan={6} className="h-12 px-4 text-center">Loading...</td>
               </tr>
             ) : (
-              coins?.map((coin, index) => (
+              coins?.map((coin: Coin, index) => (
                 <tr
                   key={coin.id}
                   className="border-b transition-colors hover:bg-muted/50"

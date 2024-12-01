@@ -1,24 +1,27 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatsOverview } from "@/components/dashboard/stats/stats-overview";
-import { PortfolioChart } from "@/components/dashboard/stats/portfolio/portfolio-chart";
-import { AssetDistribution } from "@/components/dashboard/assets/asset-distribution";
+import { PortfolioOverview } from "@/components/dashboard/portfolio/portfolio-overview";
+import { MarketOverview } from "@/components/market/market-overview";
 
 export function DashboardTabs() {
   return (
     <Tabs defaultValue="overview" className="space-y-4">
       <TabsList>
         <TabsTrigger value="overview">Overview</TabsTrigger>
-        <TabsTrigger value="wallets">Wallets</TabsTrigger>
-        <TabsTrigger value="exchanges">Exchanges</TabsTrigger>
-        <TabsTrigger value="analytics">Analytics</TabsTrigger>
+        <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
+        <TabsTrigger value="market">Market</TabsTrigger>
       </TabsList>
 
       <TabsContent value="overview" className="space-y-4">
         <StatsOverview />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          <PortfolioChart />
-          <AssetDistribution />
-        </div>
+      </TabsContent>
+
+      <TabsContent value="portfolio" className="space-y-4">
+        <PortfolioOverview />
+      </TabsContent>
+
+      <TabsContent value="market" className="space-y-4">
+        <MarketOverview />
       </TabsContent>
     </Tabs>
   );
